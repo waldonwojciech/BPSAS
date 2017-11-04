@@ -5,7 +5,6 @@ import pl.wojciechwaldon.bpsas.domain.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,22 +22,18 @@ public class Conversation {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "conversation", orphanRemoval = true)
     @NotNull
-    private List<Message> message;
+    private List<Message> messages;
 
-    public Conversation() {
+    Conversation() {
     }
 
-    public Conversation(@NotNull Set<User> users, @NotNull List<Message> message) {
-        this.users = users;
-        this.message = message;
+    public Conversation(Builder builder) {
+        this.users = builder.users;
+        this.messages = builder.messages;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Set<User> getUsers() {
@@ -49,12 +44,12 @@ public class Conversation {
         this.users = users;
     }
 
-    public List<Message> getMessage() {
-        return message;
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    public void setMessage(List<Message> message) {
-        this.message = message;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     @Override
@@ -69,15 +64,37 @@ public class Conversation {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (messages != null ? messages.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "Conversation{" +
                 "id=" + id +
-                ", users=" + users.size() +
-                ", message=" + message.toString() +
+                ", messages=" + messages +
                 '}';
+    }
+
+    public static class Builder {
+
+        private Set<User> users;
+        private List<Message> messages;
+
+        public Builder withUsers(@NotNull Set<User> users) {
+            this.users = users;
+            return this;
+        }
+
+        public Builder withMessages(@NotNull List<Message> messages) {
+            this.messages = messages;
+            return this;
+        }
+
+        public Conversation build() {
+            return new Conversation(this);
+        }
+
     }
 }

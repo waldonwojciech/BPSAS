@@ -4,6 +4,7 @@ import pl.wojciechwaldon.bpsas.domain.model.tag.Tag;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -15,12 +16,18 @@ public class Announcement {
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @NotNull
     private Set<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "announcements")
     private Set<Tag> tags;
 
-    public Announcement() {
+    Announcement() {
+    }
+
+    Announcement(Builder builder) {
+        this.users = builder.users;
+        this.tags = builder.tags;
     }
 
     public Long getId() {
@@ -42,19 +49,44 @@ public class Announcement {
 
         Announcement that = (Announcement) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (users != null ? !users.equals(that.users) : that.users != null) return false;
+        return tags != null ? tags.equals(that.tags) : that.tags == null;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (users != null ? users.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "Announcement{" +
                 "id=" + id +
-                ", users=" + users.size() +
+                ", tags=" + tags +
                 '}';
+    }
+
+    public static class Builder {
+
+        private Set<User> users;
+        private Set<Tag> tags;
+
+        public Builder withUsers(@NotNull Set<User> users) {
+            this.users = users;
+            return  this;
+        }
+
+        public Builder withTags(Set<Tag> tags) {
+            this.tags = tags;
+            return  this;
+        }
+
+        public Announcement build() {
+            return new Announcement(this);
+        }
     }
 }

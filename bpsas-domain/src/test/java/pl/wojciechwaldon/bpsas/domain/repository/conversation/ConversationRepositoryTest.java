@@ -23,6 +23,7 @@ import pl.wojciechwaldon.bpsas.domain.repository.user.UserRepository;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestSpringBootApplicationClass.class})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
@@ -46,10 +47,12 @@ public class ConversationRepositoryTest {
     private final String TEST_PASSWORD = "test-password";
     private final String TEST_FIRST_NAME = "test-first-name";
     private final String TEST_LAST_NAME = "test-last-name";
-    private final String TEST_MESSAGE_CONTENT = "test-test-message-content";
+    private final String TEST_MESSAGE_CONTENT = "test-message-content";
+    private final String TEST_ADDING_MESSAGE_CONTENT = "test-adding-message-content";
 
     private Conversation test_conversation;
     private Message test_message;
+    private Message test_adding_message;
     private Announcement test_announcement;
     private Set<User> test_users = new HashSet<User>();
     private List<Message> test_messages = new ArrayList<Message>();
@@ -58,7 +61,7 @@ public class ConversationRepositoryTest {
 
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         conversationRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -67,7 +70,7 @@ public class ConversationRepositoryTest {
     public void shouldPersistConversationWithExistingSenderAndReciever() {
         //given
         prepareSenderAndReciever();
-        test_conversation = new Conversation(test_users,new ArrayList<Message>());
+        prepareConversation();
 
         //when
         test_conversation = conversationRepository.save(test_conversation);
@@ -117,19 +120,27 @@ public class ConversationRepositoryTest {
     public void shouldAddMessageToConversation() {
         //given
         prepareConversation();
+        prepareAddingMessage();
 
         //when
-        test_conversation.getMessage().add(test_message);
+        test_conversation.getMessages().add(test_adding_message);
         test_conversation = conversationRepository.save(test_conversation);
 
         Conversation fetchetConversaction = conversationRepository.findById(test_conversation.getId()).get();
-        Message fetchedMessage = messageRepository.findById(test_message.getId()).get();
+        Message fetchedMessage = messageRepository.findById(test_adding_message.getId()).get();
 
         //then
         assertThat(fetchetConversaction).isEqualTo(test_conversation);
-        assertThat(fetchedMessage).isEqualTo(test_message);
+        assertThat(fetchedMessage).isEqualTo(test_adding_message);
         assertThat(conversationRepository.count()).isEqualTo(1);
-        assertThat(messageRepository.count()).isEqualTo(1);
+        assertThat(messageRepository.count()).isEqualTo(2);
+    }
+
+    private void prepareAddingMessage() {
+        test_adding_message = new Message.Builder()
+                .withConversation(test_conversation)
+                .withContent(TEST_ADDING_MESSAGE_CONTENT)
+                .build();
     }
 
     private void prepareMessage() {
@@ -142,12 +153,15 @@ public class ConversationRepositoryTest {
     }
 
     private void prepareConversation() {
-        test_conversation = new Conversation(test_users, test_messages);
+        test_conversation = new Conversation.Builder()
+                .withMessages(test_messages)
+                .withUsers(test_users)
+                .build();
         prepareMessage();
     }
 
     private void prepareSenderAndReciever() {
-        User sender =  new NaturalPerson.Builder()
+        User sender = new NaturalPerson.Builder()
                 .withEmail(TEST_EMAIL_SENDER)
                 .withPassword(TEST_PASSWORD)
                 .withFirstName(TEST_FIRST_NAME)

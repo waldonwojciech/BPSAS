@@ -33,10 +33,6 @@ public class Message {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Conversation getConversation() {
         return conversation;
     }
@@ -60,12 +56,17 @@ public class Message {
 
         Message message = (Message) o;
 
-        return id != null ? id.equals(message.id) : message.id == null;
+        if (id != null ? !id.equals(message.id) : message.id != null) return false;
+        if (conversation != null ? !conversation.equals(message.conversation) : message.conversation != null)
+            return false;
+        return content != null ? content.equals(message.content) : message.content == null;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        return result;
     }
 
     @Override

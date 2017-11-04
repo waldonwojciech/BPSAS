@@ -66,4 +66,27 @@ public class User implements Serializable{
     public void setAnnouncements(Set<Announcement> announcements) {
         this.announcements = announcements;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (conversations != null ? !conversations.equals(user.conversations) : user.conversations != null)
+            return false;
+        return announcements != null ? announcements.equals(user.announcements) : user.announcements == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (conversations != null ? conversations.hashCode() : 0);
+        result = 31 * result + (announcements != null ? announcements.hashCode() : 0);
+        return result;
+    }
 }

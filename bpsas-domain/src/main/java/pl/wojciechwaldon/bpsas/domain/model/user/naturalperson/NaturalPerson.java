@@ -49,6 +49,7 @@ public class NaturalPerson extends User {
 
         NaturalPerson that = (NaturalPerson) o;
 
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
         return email != null ? email.equals(that.email) : that.email == null;
     }
 

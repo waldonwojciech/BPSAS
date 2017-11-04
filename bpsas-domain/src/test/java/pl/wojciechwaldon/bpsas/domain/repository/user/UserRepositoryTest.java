@@ -72,15 +72,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldPersistNaturalPersonWithConversation() {
         //given
-        test_naturalPerson = new NaturalPerson.Builder()
-                .withEmail(TEST_EMAIL)
-                .withPassword(TEST_PASSWORD)
-                .withFirstName(TEST_FIRST_NAME)
-                .withLastName(TEST_LAST_NAME)
-                .withAnnouncements(test_announcements)
-                .withConversations(test_conversations)
-                .build();
-        test_users.add(test_naturalPerson);
+        prepareNaturalPerson();
         prepareConversation();
         test_naturalPerson.getConversations().add(test_conversation);
 
@@ -97,14 +89,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldPersistCompanyWithConversation() {
         //given
-        test_company = new Company.Builder()
-                .withEmail(TEST_EMAIL)
-                .withPassword(TEST_PASSWORD)
-                .withCompanyName(TEST_COMPANY_NAME)
-                .withAnnouncements(test_announcements)
-                .withConversations(test_conversations)
-                .build();
-        test_users.add(test_company);
+        prepareCompany();
         prepareConversation();
         test_company.getConversations().add(test_conversation);
 
@@ -122,15 +107,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldUpdateNaturalPersonWithConversation() {
         //given
-        test_naturalPerson = new NaturalPerson.Builder()
-                .withEmail(TEST_EMAIL)
-                .withPassword(TEST_PASSWORD)
-                .withFirstName(TEST_FIRST_NAME)
-                .withLastName(TEST_LAST_NAME)
-                .withAnnouncements(test_announcements)
-                .withConversations(test_conversations)
-                .build();
-        test_users.add(test_naturalPerson);
+        prepareNaturalPerson();
         prepareConversation();
         test_naturalPerson.getConversations().add(test_conversation);
         test_naturalPerson = userRepository.save(test_naturalPerson);
@@ -156,14 +133,42 @@ public class UserRepositoryTest {
     }
 
     private void prepareAnnouncement() {
-        test_announcement = new Announcement();
-        test_announcement.setUsers(test_users);
+        test_announcement = new Announcement.Builder()
+                .withUsers(test_users)
+                .build();
 
         test_announcements.add(test_announcement);
     }
 
+    private void prepareCompany() {
+        test_company = new Company.Builder()
+                .withEmail(TEST_EMAIL)
+                .withPassword(TEST_PASSWORD)
+                .withCompanyName(TEST_COMPANY_NAME)
+                .withAnnouncements(test_announcements)
+                .withConversations(test_conversations)
+                .build();
+        test_users.add(test_company);
+    }
+
+    private void prepareNaturalPerson() {
+        test_naturalPerson = new NaturalPerson.Builder()
+                .withEmail(TEST_EMAIL)
+                .withPassword(TEST_PASSWORD)
+                .withFirstName(TEST_FIRST_NAME)
+                .withLastName(TEST_LAST_NAME)
+                .withAnnouncements(test_announcements)
+                .withConversations(test_conversations)
+                .build();
+        test_users.add(test_naturalPerson);
+    }
+
     private void prepareConversation() {
-        test_conversation = new Conversation(test_users, test_messages);
+        test_conversation = new Conversation.Builder()
+                .withUsers(test_users)
+                .withMessages(test_messages)
+                .build();
+
         prepareMessage();
     }
 }
