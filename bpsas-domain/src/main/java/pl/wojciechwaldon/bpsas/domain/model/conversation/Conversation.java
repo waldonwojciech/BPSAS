@@ -2,6 +2,7 @@ package pl.wojciechwaldon.bpsas.domain.model.conversation;
 
 import pl.wojciechwaldon.bpsas.domain.model.message.Message;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
+import pl.wojciechwaldon.bpsas.domain.validator.conversation.ConversationAttributesValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,8 @@ public class Conversation {
     public Conversation(Builder builder) {
         this.users = builder.users;
         this.messages = builder.messages;
+
+        ConversationAttributesValidator.validate(this);
     }
 
     public Long getId() {

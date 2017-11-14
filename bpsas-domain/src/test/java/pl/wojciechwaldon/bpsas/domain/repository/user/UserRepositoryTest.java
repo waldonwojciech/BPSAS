@@ -79,8 +79,10 @@ public class UserRepositoryTest {
         //when
         test_naturalPerson = userRepository.save(test_naturalPerson);
 
+        User fetchedNaturalPerson = userRepository.findById(test_naturalPerson.getEmail()).get();
+
         //then
-        assertThat(userRepository.findById(test_naturalPerson.getEmail()).get()).isEqualTo(test_naturalPerson);
+        assertThat(fetchedNaturalPerson).isEqualTo(test_naturalPerson);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(conversationRepository.count()).isEqualTo(1);
         assertThat(messageRepository.count()).isEqualTo(1);
@@ -96,8 +98,10 @@ public class UserRepositoryTest {
         //when
         test_company = userRepository.save(test_company);
 
+        User fetchedCompany = userRepository.findById(test_company.getEmail()).get();
+
         //then
-        assertThat(userRepository.findById(test_company.getEmail()).get()).isEqualTo(test_company);
+        assertThat(fetchedCompany).isEqualTo(test_company);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(conversationRepository.count()).isEqualTo(1);
         assertThat(messageRepository.count()).isEqualTo(1);
@@ -113,15 +117,115 @@ public class UserRepositoryTest {
         test_naturalPerson = userRepository.save(test_naturalPerson);
 
         //when
-        test_naturalPerson.setPassword("newtestpassword");
+        test_naturalPerson.setPassword("new_test_password");
         userRepository.save(test_naturalPerson);
 
+        User fetchedNaturalPerson = userRepository.findById(test_naturalPerson.getEmail()).get();
+
         //then
-        assertThat(userRepository.findById(test_naturalPerson.getEmail()).get()).isEqualTo(test_naturalPerson);
+        assertThat(fetchedNaturalPerson).isEqualTo(test_naturalPerson);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(conversationRepository.count()).isEqualTo(1);
         assertThat(messageRepository.count()).isEqualTo(1);
     }
+
+    @Test
+    public void shouldUpdateCompanyWithConversation() {
+        //given
+        prepareCompany();
+        prepareConversation();
+        test_company.getConversations().add(test_conversation);
+        test_company = userRepository.save(test_company);
+
+        //when
+        test_company.setPassword("new_test_password");
+        userRepository.save(test_company);
+
+        User fetchedCompany = userRepository.findById(test_company.getEmail()).get();
+
+        //then
+        assertThat(fetchedCompany).isEqualTo(test_company);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(conversationRepository.count()).isEqualTo(1);
+        assertThat(messageRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldPersistNaturalPersonWithAnnoucement() {
+        //given
+        prepareNaturalPerson();
+        prepareAnnouncement();
+
+        //when
+        test_naturalPerson.getAnnouncements().add(test_announcement);
+        test_naturalPerson = userRepository.save(test_naturalPerson);
+
+        User fetchedNaturalPerson = userRepository.findById(test_naturalPerson.getEmail()).get();
+
+        //then
+        assertThat(fetchedNaturalPerson).isEqualTo(test_naturalPerson);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(announcementRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldPersistCompanyWithAnnoucement() {
+        //given
+        prepareCompany();
+        prepareAnnouncement();
+
+        //when
+        test_company.getAnnouncements().add(test_announcement);
+        test_company = userRepository.save(test_company);
+
+        User fetchedCompany = userRepository.findById(test_company.getEmail()).get();
+
+        //then
+        assertThat(fetchedCompany).isEqualTo(test_company);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(announcementRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldUpdateNaturalPersonWithAnnoucement() {
+        //given
+        prepareNaturalPerson();
+        prepareAnnouncement();
+        test_naturalPerson.getAnnouncements().add(test_announcement);
+        test_naturalPerson = userRepository.save(test_naturalPerson);
+
+        //when
+        test_naturalPerson.setPassword("new_test_passsword");
+        test_naturalPerson = userRepository.save(test_naturalPerson);
+
+        User fetchedNaturalPerson = userRepository.findById(test_naturalPerson.getEmail()).get();
+
+        //then
+        assertThat(fetchedNaturalPerson).isEqualTo(test_naturalPerson);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(announcementRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldUpdateCompanyWithAnnoucement() {
+        //given
+        prepareCompany();
+        prepareAnnouncement();
+        test_company.getAnnouncements().add(test_announcement);
+        test_company = userRepository.save(test_company);
+
+        //when
+        test_company.setPassword("new_test_password");
+        test_company = userRepository.save(test_company);
+
+        User fetchedCompany = userRepository.findById(test_company.getEmail()).get();
+
+        //then
+        assertThat(fetchedCompany).isEqualTo(test_company);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(announcementRepository.count()).isEqualTo(1);
+    }
+
 
     private void prepareMessage() {
         test_message = new Message.Builder()

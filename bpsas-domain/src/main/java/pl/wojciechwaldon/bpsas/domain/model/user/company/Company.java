@@ -3,6 +3,7 @@ package pl.wojciechwaldon.bpsas.domain.model.user.company;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
+import pl.wojciechwaldon.bpsas.domain.validator.user.company.CompanyAttributesValidator;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,8 @@ public class Company extends User {
     public Company(Builder builder) {
         super(builder.email, builder.password, builder.conversations, builder.announcements);
         this.companyName = builder.companyName;
+
+        CompanyAttributesValidator.validate(this);
     }
 
     public String getCompanyName() {

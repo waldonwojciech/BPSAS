@@ -3,6 +3,7 @@ package pl.wojciechwaldon.bpsas.domain.model.user.naturalperson;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
+import pl.wojciechwaldon.bpsas.domain.validator.user.naturalperson.NaturalPersonAttributesValidator;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,8 @@ public class NaturalPerson extends User {
         super(builder.email, builder.password, builder.conversations, builder.announcements);
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
+
+        NaturalPersonAttributesValidator.validate(this);
     }
 
     public String getFirstName() {

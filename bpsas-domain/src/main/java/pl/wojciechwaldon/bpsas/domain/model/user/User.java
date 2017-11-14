@@ -39,7 +39,7 @@ public class User implements Serializable{
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotNull String email) {
         this.email = email;
     }
 
