@@ -16,9 +16,11 @@ import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.message.Message;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
+import pl.wojciechwaldon.bpsas.domain.repository.BaseRepositoryTest;
 import pl.wojciechwaldon.bpsas.domain.repository.announcement.AnnouncementRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.message.MessageRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.UserRepository;
+import pl.wojciechwaldon.bpsas.domain.repository.user.naturalperson.NaturalPersonRepository;
 
 import java.util.*;
 
@@ -28,42 +30,29 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 @ContextConfiguration(classes = {TestSpringBootApplicationClass.class})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @WebAppConfiguration
-public class ConversationRepositoryTest {
+public class ConversationRepositoryTest extends BaseRepositoryTest{
 
     @Autowired
-    private ConversationRepository conversationRepository;
-
-    @Autowired
-    private MessageRepository messageRepository;
+    private NaturalPersonRepository naturalPersonRepository;
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private AnnouncementRepository announcementRepository;
 
     private final String TEST_EMAIL_SENDER = "test-email-sender";
     private final String TEST_EMAIL_RECEIVER = "test-email-receiver";
     private final String TEST_PASSWORD = "test-password";
     private final String TEST_FIRST_NAME = "test-first-name";
     private final String TEST_LAST_NAME = "test-last-name";
-    private final String TEST_MESSAGE_CONTENT = "test-message-content";
     private final String TEST_ADDING_MESSAGE_CONTENT = "test-adding-message-content";
 
-    private Conversation test_conversation;
-    private Message test_message;
     private Message test_adding_message;
-    private Announcement test_announcement;
     private Set<User> test_users = new HashSet<User>();
-    private List<Message> test_messages = new ArrayList<Message>();
-    private Set<Conversation> test_conversations = new HashSet<Conversation>();
-    private Set<Announcement> test_announcements = new HashSet<Announcement>();
 
 
     @After
     public void tearDown() {
         conversationRepository.deleteAll();
-        userRepository.deleteAll();
+        naturalPersonRepository.deleteAll();
     }
 
     @Test
@@ -78,7 +67,7 @@ public class ConversationRepositoryTest {
         //then
         assertThat(conversationRepository.findById(test_conversation.getId()).get()).isEqualTo(test_conversation);
         assertThat(conversationRepository.count()).isEqualTo(1);
-        assertThat(userRepository.count()).isEqualTo(2);
+        assertThat(naturalPersonRepository.count()).isEqualTo(2);
     }
 
     @Test
@@ -96,7 +85,7 @@ public class ConversationRepositoryTest {
         assertThat(conversationRepository.findById(test_conversation.getId()).get()).isEqualTo(test_conversation);
         assertThat(conversationRepository.count()).isEqualTo(1);
         assertThat(messageRepository.count()).isEqualTo(1);
-        assertThat(userRepository.count()).isEqualTo(2);
+        assertThat(naturalPersonRepository.count()).isEqualTo(2);
     }
 
     @Test
@@ -112,7 +101,7 @@ public class ConversationRepositoryTest {
         //then
         assertThat(conversationRepository.findById(test_conversation.getId())).isEqualTo(Optional.empty());
         assertThat(messageRepository.findById(test_messages.get(0).getId())).isEqualTo(Optional.empty());
-        assertThat(userRepository.count()).isEqualTo(2);
+        assertThat(naturalPersonRepository.count()).isEqualTo(2);
 
     }
 
@@ -141,23 +130,6 @@ public class ConversationRepositoryTest {
                 .withConversation(test_conversation)
                 .withContent(TEST_ADDING_MESSAGE_CONTENT)
                 .build();
-    }
-
-    private void prepareMessage() {
-        test_message = new Message.Builder()
-                .withConversation(test_conversation)
-                .withContent(TEST_MESSAGE_CONTENT)
-                .build();
-
-        test_messages.add(test_message);
-    }
-
-    private void prepareConversation() {
-        test_conversation = new Conversation.Builder()
-                .withMessages(test_messages)
-                .withUsers(test_users)
-                .build();
-        prepareMessage();
     }
 
     private void prepareSenderAndReciever() {

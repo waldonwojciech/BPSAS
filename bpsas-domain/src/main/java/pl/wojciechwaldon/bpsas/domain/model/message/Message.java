@@ -1,5 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.message;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.validator.message.MessageAttributesValidator;
 
@@ -17,6 +19,7 @@ public class Message {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,
             CascadeType.MERGE}, targetEntity = Conversation.class)
     @NotNull
+    @JsonManagedReference
     private Conversation conversation;
 
     @NotNull

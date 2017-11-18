@@ -1,5 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.conversation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.wojciechwaldon.bpsas.domain.model.message.Message;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 import pl.wojciechwaldon.bpsas.domain.validator.conversation.ConversationAttributesValidator;
@@ -19,10 +21,12 @@ public class Conversation {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @NotNull
+    @JsonBackReference
     private Set<User> users;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "conversation", orphanRemoval = true)
     @NotNull
+    @JsonBackReference
     private List<Message> messages;
 
     Conversation() {

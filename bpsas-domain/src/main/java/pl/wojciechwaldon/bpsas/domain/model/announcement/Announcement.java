@@ -1,5 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.announcement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.wojciechwaldon.bpsas.domain.model.tag.Tag;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 
@@ -17,9 +19,11 @@ public class Announcement {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @NotNull
+    @JsonBackReference
     private Set<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "announcements")
+    @JsonManagedReference
     private Set<Tag> tags;
 
     Announcement() {

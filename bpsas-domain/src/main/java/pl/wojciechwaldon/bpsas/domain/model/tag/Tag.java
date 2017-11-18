@@ -1,5 +1,6 @@
 package pl.wojciechwaldon.bpsas.domain.model.tag;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class Tag implements Serializable {
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JsonBackReference
     private Set<Announcement> announcements;
 
     Tag() {

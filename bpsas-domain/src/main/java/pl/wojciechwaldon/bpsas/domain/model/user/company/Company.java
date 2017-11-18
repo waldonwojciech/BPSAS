@@ -44,13 +44,6 @@ public class Company extends User {
     }
 
     @Override
-    public int hashCode() {
-        int result = email != null ? email.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "Company{" +
                 "companyName='" + companyName + '\'' +
