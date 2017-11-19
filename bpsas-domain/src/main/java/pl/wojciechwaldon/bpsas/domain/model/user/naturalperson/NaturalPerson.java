@@ -18,7 +18,7 @@ public class NaturalPerson extends User {
     @NotNull
     private String lastName;
 
-    NaturalPerson() {
+    public NaturalPerson() {
     }
 
     NaturalPerson(Builder builder) {

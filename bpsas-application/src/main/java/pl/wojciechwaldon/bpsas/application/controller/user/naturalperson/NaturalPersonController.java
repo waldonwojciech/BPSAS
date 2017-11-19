@@ -4,16 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import pl.wojciechwaldon.bpsas.application.exception.user.naturalperson.NaturalPersonNotFoundException;
 import pl.wojciechwaldon.bpsas.application.service.user.naturalperson.NaturalPersonService;
 import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 
+import javax.validation.Valid;
+
 @Controller
+@EnableWebMvc
 @RequestMapping(value = "/naturalPerson")
 public class NaturalPersonController {
 
@@ -27,5 +29,10 @@ public class NaturalPersonController {
     public NaturalPerson getNaturalPersonByEmail(@RequestParam(value = "email") String email)
             throws NaturalPersonNotFoundException {
         return naturalPersonService.getNaturalPersonByEmail(email);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<NaturalPerson> postNaturalPerson(@RequestBody NaturalPerson naturalPerson) {
+        return naturalPersonService.postNaturalPerson(naturalPerson);
     }
 }

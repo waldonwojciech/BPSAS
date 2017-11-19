@@ -1,5 +1,6 @@
 package pl.wojciechwaldon.bpsas.domain.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
@@ -21,11 +22,11 @@ public class User implements Serializable{
     protected String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonManagedReference
+    @JsonIgnore
     protected Set<Conversation> conversations;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonManagedReference
+    @JsonIgnore
     protected Set<Announcement> announcements;
 
     protected User() {

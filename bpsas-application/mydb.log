@@ -1,4 +1,9 @@
 /*C12*/SET SCHEMA PUBLIC
+alter table announcement_users drop constraint FKis4fsi2bb72r0c99bs8pgkftm
+alter table conversation_users drop constraint FKgi76swivxn3rvd4dlu36pje3j
+alter table message drop constraint FK6yskk3hxw5sklwgi25y6d5u1l
+alter table tag_announcements drop constraint FKjk6l3son75ufal09lh07heogl
+alter table tag_announcements drop constraint FKbswymkobv6oxp03n7fs1beuh0
 drop table announcement if exists
 drop table announcement_users if exists
 drop table company if exists

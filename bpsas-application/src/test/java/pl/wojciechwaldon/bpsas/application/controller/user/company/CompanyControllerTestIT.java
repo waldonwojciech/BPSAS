@@ -66,9 +66,9 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
                 .andExpect(content().contentType(TestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("email", is(company.getEmail())))
                 .andExpect(jsonPath("password", is(company.getPassword())))
-                .andExpect(jsonPath("companyName", is(company.getCompanyName())))
-                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
-                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
+                .andExpect(jsonPath("companyName", is(company.getCompanyName())));
+//                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
+//                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
     }
 
     @Test
@@ -78,9 +78,9 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
                 .andExpect(content().contentType(TestUtils.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("email", is(company.getEmail())))
                 .andExpect(jsonPath("password", is(company.getPassword())))
-                .andExpect(jsonPath("companyName", is(company.getCompanyName())))
-                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
-                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
+                .andExpect(jsonPath("companyName", is(company.getCompanyName())));
+//                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
+//                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
     }
 
     private void prepareCompany() {

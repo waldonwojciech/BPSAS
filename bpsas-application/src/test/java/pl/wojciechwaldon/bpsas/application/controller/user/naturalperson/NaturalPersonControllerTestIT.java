@@ -1,16 +1,19 @@
 package pl.wojciechwaldon.bpsas.application.controller.user.naturalperson;
 
+import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pl.wojciechwaldon.bpsas.application.TestUtils;
 import pl.wojciechwaldon.bpsas.application.controller.WebRestConfigClassTest;
+import pl.wojciechwaldon.bpsas.application.exception.user.naturalperson.NaturalPersonAlreadyExistException;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.message.Message;
@@ -23,12 +26,12 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
+public class NaturalPersonControllerTestIT extends WebRestConfigClassTest {
 
     private MockMvc mockMvc;
 
@@ -44,7 +47,8 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
     @Autowired
     private AnnouncementRepository announcementRepository;
 
-    private NaturalPerson naturalPerson;
+    private NaturalPerson persistedNaturalPerson;
+    private NaturalPerson unpersistedNaturalPerson;
     private Message message;
     private Conversation conversation;
     private Announcement announcement;
@@ -52,7 +56,8 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(naturalPersonController).build();
-        prepareNaturalPerson();
+        preparePersistedNaturalPerson();
+        prepareUnPersistedNaturalPerson();
     }
 
     @After
@@ -61,16 +66,41 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
     }
 
     @Test
-    public void shouldGetCompanyByEmail() throws Exception {
-        mockMvc.perform(get("/naturalPerson/findByEmail?email=" + naturalPerson.getEmail()))
+    public void shouldGetNaturalPersonByEmail() throws Exception {
+        mockMvc.perform(get("/naturalPerson/findByEmail?email=" + persistedNaturalPerson.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("email", is(naturalPerson.getEmail())))
-                .andExpect(jsonPath("password", is(naturalPerson.getPassword())))
-                .andExpect(jsonPath("firstName", is(naturalPerson.getFirstName())))
-                .andExpect(jsonPath("lastName", is(naturalPerson.getLastName())))
-                .andExpect(jsonPath("conversations.length()", is(naturalPerson.getConversations().size())))
-                .andExpect(jsonPath("announcements.length()", is(naturalPerson.getAnnouncements().size())));
+                .andExpect(jsonPath("email", is(persistedNaturalPerson.getEmail())))
+                .andExpect(jsonPath("password", is(persistedNaturalPerson.getPassword())))
+                .andExpect(jsonPath("firstName", is(persistedNaturalPerson.getFirstName())))
+                .andExpect(jsonPath("lastName", is(persistedNaturalPerson.getLastName())));
+//                .andExpect(jsonPath("conversations.length()", is(unpersistedNaturalPerson.getConversations().size())))
+//                .andExpect(jsonPath("announcements.length()", is(unpersistedNaturalPerson.getAnnouncements().size())));
+    }
+
+    public void shoulThrowNaturalPersonAlreadyExistException() throws Exception {
+        Gson gson = new Gson();
+        String jsonNaturalPerson = gson.toJson(persistedNaturalPerson, NaturalPerson.class);
+
+        mockMvc.perform(post("/naturalPerson")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonNaturalPerson)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shoulPostNaturalPerson() throws Exception {
+       Gson gson = new Gson();
+        String jsonNaturalPerson = gson.toJson(unpersistedNaturalPerson, NaturalPerson.class);
+
+        mockMvc.perform(post("/naturalPerson")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonNaturalPerson)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
     protected void prepareMessage() {
@@ -82,7 +112,7 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
 
     protected void prepareAnnouncement() {
         announcement = new Announcement.Builder()
-                .withUsers(Sets.newSet(naturalPerson))
+                .withUsers(Sets.newSet(persistedNaturalPerson))
                 .build();
 
         announcementRepository.save(announcement);
@@ -90,7 +120,7 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
 
     protected void prepareConversation() {
         conversation = new Conversation.Builder()
-                .withUsers(Sets.newSet(naturalPerson))
+                .withUsers(Sets.newSet(persistedNaturalPerson))
                 .withMessages(Arrays.asList(message))
                 .build();
 
@@ -99,8 +129,8 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
         conversationRepository.save(conversation);
     }
 
-    private void prepareNaturalPerson() {
-        naturalPerson = new NaturalPerson.Builder()
+    private void preparePersistedNaturalPerson() {
+        persistedNaturalPerson = new NaturalPerson.Builder()
                 .withEmail("test-email")
                 .withPassword("test-password")
                 .withFirstName("test-first-name")
@@ -112,8 +142,20 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest{
         prepareAnnouncement();
         prepareConversation();
 
-        naturalPersonRepository.save(naturalPerson);
+        naturalPersonRepository.save(persistedNaturalPerson);
 
+    }
+
+    private void prepareUnPersistedNaturalPerson() {
+        unpersistedNaturalPerson = new NaturalPerson.Builder()
+                .withEmail("test-email-unpresisted")
+                .withPassword("test-password-unpresisted")
+                .withFirstName("test-first-name-unpresisted")
+                .withLastName("test-last-name-unpresisted")
+                .build();
+
+        prepareAnnouncement();
+        prepareConversation();
     }
 
     private void clearDatabase() {
