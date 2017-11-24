@@ -43,7 +43,7 @@
 
     <profiles>
         <profile>
-            <id>Dev</id>
+            <id>dev</id>
             <properties>
                 <activatedProperties>dev</activatedProperties>
             </properties>
@@ -82,7 +82,7 @@
             </dependencies>
         </profile>
         <profile>
-        <id>Dev + tests</id>
+        <id>dev + tests</id>
         <properties>
             <activatedProperties>dev</activatedProperties>
         </properties>
@@ -144,7 +144,7 @@
         </dependencies>
     </profile>
         <profile>
-            <id>Prod</id>
+            <id>prod</id>
             <properties>
                 <activatedProperties>prod</activatedProperties>
             </properties>
