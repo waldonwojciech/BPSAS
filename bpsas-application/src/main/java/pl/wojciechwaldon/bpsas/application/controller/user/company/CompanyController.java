@@ -20,7 +20,7 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Company> postCompany(@RequestBody Company company) {
         return companyService.postCompany(company);
     }
