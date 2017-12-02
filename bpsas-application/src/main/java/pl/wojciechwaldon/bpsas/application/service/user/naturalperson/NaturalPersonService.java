@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.wojciechwaldon.bpsas.application.exception.user.naturalperson.NaturalPersonAlreadyExistException;
 import pl.wojciechwaldon.bpsas.application.exception.user.naturalperson.NaturalPersonNotFoundException;
+import pl.wojciechwaldon.bpsas.application.service.EmailAvaibilityValidator;
 import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 import pl.wojciechwaldon.bpsas.domain.repository.user.naturalperson.NaturalPersonRepository;
 
@@ -18,6 +19,9 @@ public class NaturalPersonService {
     @Autowired
     private NaturalPersonRepository naturalPersonRepository;
 
+    @Autowired
+    private EmailAvaibilityValidator emailAvaibilityValidator;
+
     public NaturalPerson getNaturalPersonByEmail(String email) {
         return validateReceivedResult(naturalPersonRepository.findByEmail(email));
     }
@@ -25,16 +29,12 @@ public class NaturalPersonService {
 
     public ResponseEntity<NaturalPerson> postNaturalPerson(NaturalPerson naturalPerson) {
         String email = naturalPerson.getEmail();
-        if(isEmailAvaible(email)) {
+        if(emailAvaibilityValidator.isEmailAvaible(email)) {
             naturalPersonRepository.save(naturalPerson);
 
             return new ResponseEntity<NaturalPerson>(HttpStatus.CREATED);
         }
         throw new NaturalPersonAlreadyExistException();
-    }
-
-    private boolean isEmailAvaible(String email) {
-        return !naturalPersonRepository.findByEmail(email).isPresent();
     }
 
 

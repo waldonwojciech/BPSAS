@@ -2,15 +2,13 @@ package pl.wojciechwaldon.bpsas.application.controller.user.company;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import pl.wojciechwaldon.bpsas.application.exception.user.company.CompanyNotFoundException;
 import pl.wojciechwaldon.bpsas.application.service.user.company.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import pl.wojciechwaldon.bpsas.domain.model.user.company.Company;
 
 @Controller
@@ -21,6 +19,11 @@ public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Company> postCompany(@RequestBody Company company) {
+        return companyService.postCompany(company);
+    }
 
     @RequestMapping(value = "/findByCompanyName", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -1,12 +1,14 @@
 package pl.wojciechwaldon.bpsas.application.controller.user.company;
 
 
+import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,7 +25,9 @@ import pl.wojciechwaldon.bpsas.domain.repository.user.company.CompanyRepository;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,7 +47,8 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
     @Autowired
     private AnnouncementRepository announcementRepository;
 
-    private Company company;
+    private Company persistedCompany;
+    private Company unpersistedCompany;
     private Message message;
     private Conversation conversation;
     private Announcement announcement;
@@ -51,7 +56,8 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(companyController).build();
-        prepareCompany();
+        preparePersistedCompany();
+        prepareUnersistedCompany();
     }
 
     @After
@@ -59,35 +65,62 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
         clearDatabase();
     }
 
+
+    @Test
+    public void shoulThrowCompanyAlreadyExistException() throws Exception {
+        Gson gson = new Gson();
+        String jsonCompany = gson.toJson(persistedCompany, Company.class);
+
+        mockMvc.perform(post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonCompany)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shoulPostCompany() throws Exception {
+        Gson gson = new Gson();
+        String jsonCompany = gson.toJson(unpersistedCompany, Company.class);
+
+        mockMvc.perform(post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonCompany)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
     @Test
     public void shouldGetCompanyByEmail() throws Exception {
-        mockMvc.perform(get("/company/findByEmail?email=" + company.getEmail()))
+        mockMvc.perform(get("/persistedCompany/findByEmail?email=" + persistedCompany.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("email", is(company.getEmail())))
-                .andExpect(jsonPath("password", is(company.getPassword())))
-                .andExpect(jsonPath("companyName", is(company.getCompanyName())));
-//                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
-//                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
+                .andExpect(jsonPath("email", is(persistedCompany.getEmail())))
+                .andExpect(jsonPath("password", is(persistedCompany.getPassword())))
+                .andExpect(jsonPath("companyName", is(persistedCompany.getCompanyName())));
+//                .andExpect(jsonPath("conversations.length()", is(persistedCompany.getConversations().size())))
+//                .andExpect(jsonPath("announcements.length()", is(persistedCompany.getAnnouncements().size())));
     }
 
     @Test
     public void shouldGetCompanyByCompanyName() throws Exception {
-        mockMvc.perform(get("/company/findByCompanyName?companyName=" + company.getCompanyName()))
+        mockMvc.perform(get("/persistedCompany/findByCompanyName?companyName=" + persistedCompany.getCompanyName()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtils.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("email", is(company.getEmail())))
-                .andExpect(jsonPath("password", is(company.getPassword())))
-                .andExpect(jsonPath("companyName", is(company.getCompanyName())));
-//                .andExpect(jsonPath("conversations.length()", is(company.getConversations().size())))
-//                .andExpect(jsonPath("announcements.length()", is(company.getAnnouncements().size())));
+                .andExpect(jsonPath("email", is(persistedCompany.getEmail())))
+                .andExpect(jsonPath("password", is(persistedCompany.getPassword())))
+                .andExpect(jsonPath("companyName", is(persistedCompany.getCompanyName())));
+//                .andExpect(jsonPath("conversations.length()", is(persistedCompany.getConversations().size())))
+//                .andExpect(jsonPath("announcements.length()", is(persistedCompany.getAnnouncements().size())));
     }
 
-    private void prepareCompany() {
-        company = new Company.Builder()
-                .withEmail("test-email")
+    private void preparePersistedCompany() {
+        persistedCompany = new Company.Builder()
+                .withEmail("test-email-persisted")
                 .withPassword("test-password")
-                .withCompanyName("test-company-name")
+                .withCompanyName("test-persistedCompany-name")
                 .withAnnouncements(Sets.newSet(announcement))
                 .withConversations(Sets.newSet(conversation))
                 .build();
@@ -95,7 +128,22 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
         prepareAnnouncement();
         prepareConversation();
 
-        companyRepository.save(company);
+        companyRepository.save(persistedCompany);
+    }
+
+    private void prepareUnersistedCompany() {
+        unpersistedCompany = new Company.Builder()
+                .withEmail("test-email-unpersisted")
+                .withPassword("test-password")
+                .withCompanyName("test-persistedCompany-name")
+                .withAnnouncements(Sets.newSet(announcement))
+                .withConversations(Sets.newSet(conversation))
+                .build();
+
+        prepareAnnouncement();
+        prepareConversation();
+
+        companyRepository.save(unpersistedCompany);
     }
 
     protected void prepareMessage() {
@@ -107,7 +155,7 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
 
     protected void prepareAnnouncement() {
         announcement = new Announcement.Builder()
-                .withUsers(Sets.newSet(company))
+                .withUsers(Sets.newSet(persistedCompany))
                 .build();
 
         announcementRepository.save(announcement);
@@ -115,7 +163,7 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
 
     protected void prepareConversation() {
         conversation = new Conversation.Builder()
-                .withUsers(Sets.newSet(company))
+                .withUsers(Sets.newSet(persistedCompany))
                 .withMessages(Arrays.asList(message))
                 .build();
 
