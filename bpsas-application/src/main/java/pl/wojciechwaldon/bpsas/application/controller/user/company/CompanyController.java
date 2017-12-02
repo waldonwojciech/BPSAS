@@ -21,6 +21,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<Company> postCompany(@RequestBody Company company) {
         return companyService.postCompany(company);
     }
