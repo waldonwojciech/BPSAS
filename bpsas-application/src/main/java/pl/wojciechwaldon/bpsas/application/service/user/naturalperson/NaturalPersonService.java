@@ -32,7 +32,7 @@ public class NaturalPersonService {
         if(emailAvaibilityValidator.isEmailAvaible(email)) {
             naturalPersonRepository.save(naturalPerson);
 
-            return new ResponseEntity<NaturalPerson>(HttpStatus.CREATED);
+            return new ResponseEntity(naturalPerson, HttpStatus.CREATED);
         }
         throw new NaturalPersonAlreadyExistException();
     }
