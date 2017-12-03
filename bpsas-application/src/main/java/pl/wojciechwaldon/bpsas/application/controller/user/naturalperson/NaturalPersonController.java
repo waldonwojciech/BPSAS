@@ -25,13 +25,12 @@ public class NaturalPersonController {
     private NaturalPersonService naturalPersonService;
 
     @RequestMapping(value = "/findByEmail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public NaturalPerson getNaturalPersonByEmail(@RequestParam(value = "email") String email)
             throws NaturalPersonNotFoundException {
         return naturalPersonService.getNaturalPersonByEmail(email);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NaturalPerson> postNaturalPerson(@RequestBody NaturalPerson naturalPerson) {
         return naturalPersonService.postNaturalPerson(naturalPerson);
     }
