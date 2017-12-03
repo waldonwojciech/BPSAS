@@ -29,7 +29,7 @@ public class CompanyService {
         if(emailAvaibilityValidator.isEmailAvaible(email)) {
             companyRepository.save(company);
 
-            return new ResponseEntity<Company>(HttpStatus.CREATED);
+            return new ResponseEntity(company, HttpStatus.CREATED);
         }
         throw new CompanyAlreadyExistException();
     }
