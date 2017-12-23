@@ -10,16 +10,16 @@ import java.util.Set;
 @Repository
 public interface NaturalPersonRepository extends CrudRepository<NaturalPerson, String> {
 
-    public Optional<NaturalPerson> findByEmail(String email);
+    Optional<NaturalPerson> findByEmail(String email);
 
-    public Optional<Set<NaturalPerson>> findByFirstName(String firstName);
+    Optional<Set<NaturalPerson>> findByFirstName(String firstName);
 
-    public Optional<Set<NaturalPerson>> findByLastName(String lastName);
+    Optional<Set<NaturalPerson>> findByLastName(String lastName);
 
-    public Optional<Set<NaturalPerson>> findByFirstNameStartingWithAndLastNameStartingWith(String firstName, String lastName);
+    Optional<Set<NaturalPerson>> findByFirstNameStartingWithAndLastNameStartingWith(String firstName, String lastName);
 
-    public Optional<Set<NaturalPerson>> findByFirstNameStartingWith(String firstName);
+    Optional<Set<NaturalPerson>> findByFirstNameStartingWith(String firstName);
 
-    public Optional<Set<NaturalPerson>> findByLastNameStartingWith(String lastName);
+    Optional<Set<NaturalPerson>> findByLastNameStartingWith(String lastName);
 
 }

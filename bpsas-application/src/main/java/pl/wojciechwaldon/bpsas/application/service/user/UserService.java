@@ -11,7 +11,8 @@ import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 import pl.wojciechwaldon.bpsas.domain.repository.user.company.CompanyRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.naturalperson.NaturalPersonRepository;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class UserService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public Set<User> searchUser(String searchPhrase) {
+    public List<User> searchUser(String searchPhrase) {
         return getFoundUsers(searchPhrase);
     }
 
@@ -40,26 +41,31 @@ public class UserService {
             throw new UserNotFoundException();
     }
 
-    private Set<User> getFoundUsers(String searchPhrase) {
-        Set<User> foundUsers = new HashSet<>();
-        Set<NaturalPerson> naturalPersons = new HashSet<>();
-        Set<Company> companies;
+    private List<User> getFoundUsers(String searchPhrase) {
+        List<User> foundUsers = new ArrayList<>();
+        List<NaturalPerson> naturalPersons = new ArrayList<>();
+        List<Company> companies = new ArrayList<>();
 
-        Set<NaturalPerson> naturalPersonRepoResult = naturalPersonRepository.findByFirstNameStartingWith(searchPhrase).get();
-        naturalPersons = addFoundNaturalPersons(naturalPersons, naturalPersonRepoResult);
-        naturalPersonRepoResult = naturalPersonRepository.findByLastNameStartingWith(searchPhrase).get();
-        naturalPersons = addFoundNaturalPersons(naturalPersons, naturalPersonRepoResult);
+        Optional<Set<NaturalPerson>> naturalPersonRepoResultOptional = naturalPersonRepository.findByFirstNameStartingWith(searchPhrase);
+        if (naturalPersonRepoResultOptional.isPresent())
+            naturalPersons = addFoundNaturalPersons(naturalPersons, (List<NaturalPerson>) naturalPersonRepoResultOptional.get());
 
-        companies = companyRepository.findByCompanyNameStartingWith(searchPhrase).get();
+        naturalPersonRepoResultOptional = naturalPersonRepository.findByLastNameStartingWith(searchPhrase);
+        if (naturalPersonRepoResultOptional.isPresent())
+            naturalPersons = addFoundNaturalPersons(naturalPersons, (List<NaturalPerson>) naturalPersonRepoResultOptional.get());
 
-        foundUsers.add((User) naturalPersons);
-        foundUsers.add((User) companies);
+        Optional<Set<Company>> companiesOptional = companyRepository.findByCompanyNameStartingWith(searchPhrase);
+        if (companiesOptional.isPresent())
+            companies = (List<Company>) companiesOptional.get();
+
+        foundUsers.addAll(naturalPersons);
+        foundUsers.addAll(companies);
 
         return foundUsers;
     }
 
-    private Set<NaturalPerson> addFoundNaturalPersons(Set<NaturalPerson> foundNaturalPersons, Set<NaturalPerson> naturalPersons) {
-        Set<NaturalPerson> uniqueResults = foundNaturalPersons;
+    private List<NaturalPerson> addFoundNaturalPersons(List<NaturalPerson> foundNaturalPersons, List<NaturalPerson> naturalPersons) {
+        List<NaturalPerson> uniqueResults = foundNaturalPersons;
         for (NaturalPerson naturalPerson : naturalPersons) {
             boolean isUnique = true;
             for (NaturalPerson foundNaturalPerson : foundNaturalPersons) {

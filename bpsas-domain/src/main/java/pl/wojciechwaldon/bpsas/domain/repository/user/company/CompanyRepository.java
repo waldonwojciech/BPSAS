@@ -10,9 +10,9 @@ import java.util.Set;
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, String> {
 
-    public Optional<Company> findByEmail(String email);
+    Optional<Company> findByEmail(String email);
 
-    public Optional<Company> findByCompanyName(String companyName);
+    Optional<Company> findByCompanyName(String companyName);
 
-    public Optional<Set<Company>> findByCompanyNameStartingWith(String companyName);
+    Optional<Set<Company>> findByCompanyNameStartingWith(String companyName);
 }
