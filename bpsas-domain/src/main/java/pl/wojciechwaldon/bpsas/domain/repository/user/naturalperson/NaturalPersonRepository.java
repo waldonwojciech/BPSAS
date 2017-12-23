@@ -16,5 +16,10 @@ public interface NaturalPersonRepository extends CrudRepository<NaturalPerson, S
 
     public Optional<Set<NaturalPerson>> findByLastName(String lastName);
 
-    public Optional<Set<NaturalPerson>> findByFirstNameAndLastName(String firstName, String lastName);
+    public Optional<Set<NaturalPerson>> findByFirstNameStartingWithAndLastNameStartingWith(String firstName, String lastName);
+
+    public Optional<Set<NaturalPerson>> findByFirstNameStartingWith(String firstName);
+
+    public Optional<Set<NaturalPerson>> findByLastNameStartingWith(String lastName);
+
 }

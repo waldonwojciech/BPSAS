@@ -19,7 +19,7 @@ public class Company extends User {
     }
 
     public Company(Builder builder) {
-        super(builder.email, builder.password, builder.conversations, builder.announcements);
+        super(builder.email, builder.password, builder.conversations, builder.announcements, builder.friends, builder.sentFriendRequests, builder.receivedFriendRequests);
         this.companyName = builder.companyName;
 
         CompanyAttributesValidator.validate(this);
@@ -27,10 +27,6 @@ public class Company extends User {
 
     public String getCompanyName() {
         return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     @Override
@@ -55,11 +51,15 @@ public class Company extends User {
     }
 
     public static class Builder {
+
         private String email;
         private String password;
         private String companyName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
+        private Set<User> friends;
+        private Set<User> sentFriendRequests;
+        private Set<User> receivedFriendRequests;
 
         public Builder withEmail(@NotNull String email) {
             this.email = email;
@@ -86,8 +86,24 @@ public class Company extends User {
             return this;
         }
 
+        public Builder withFriends(Set<User> friends) {
+            this.friends = friends;
+            return this;
+        }
+
+        public Builder withSentFriendRequests(Set<User> sentFriendRequests) {
+            this.sentFriendRequests = sentFriendRequests;
+            return this;
+        }
+
+        public Builder withReceivedFriendRequests(Set<User> receivedFriendRequests) {
+            this.receivedFriendRequests = receivedFriendRequests;
+            return this;
+        }
+
         public Company build() {
             return new Company(this);
         }
+
     }
 }

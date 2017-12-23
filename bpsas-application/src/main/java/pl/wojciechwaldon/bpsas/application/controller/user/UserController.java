@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import pl.wojciechwaldon.bpsas.application.controller.user.naturalperson.NaturalPersonController;
-import pl.wojciechwaldon.bpsas.application.exception.user.naturalperson.NaturalPersonNotFoundException;
 import pl.wojciechwaldon.bpsas.application.service.user.UserService;
-import pl.wojciechwaldon.bpsas.application.service.user.naturalperson.NaturalPersonService;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
-import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
+
+import java.util.Set;
 
 @Controller
 @EnableWebMvc
@@ -27,6 +25,11 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<User> findUser(@RequestParam(value = "searchPhrase", required = false) String searchPhrase) {
+        return userService.searchUser(searchPhrase);
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> loginUser(@RequestBody User user) {

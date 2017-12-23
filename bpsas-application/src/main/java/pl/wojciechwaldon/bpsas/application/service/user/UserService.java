@@ -11,7 +11,9 @@ import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 import pl.wojciechwaldon.bpsas.domain.repository.user.company.CompanyRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.naturalperson.NaturalPersonRepository;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -21,6 +23,10 @@ public class UserService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    public Set<User> searchUser(String searchPhrase) {
+        return getFoundUsers(searchPhrase);
+    }
 
     public ResponseEntity<User> loginUser(User user) {
         String email = user.getEmail();
@@ -34,4 +40,36 @@ public class UserService {
             throw new UserNotFoundException();
     }
 
+    private Set<User> getFoundUsers(String searchPhrase) {
+        Set<User> foundUsers = new HashSet<>();
+        Set<NaturalPerson> naturalPersons = new HashSet<>();
+        Set<Company> companies;
+
+        Set<NaturalPerson> naturalPersonRepoResult = naturalPersonRepository.findByFirstNameStartingWith(searchPhrase).get();
+        naturalPersons = addFoundNaturalPersons(naturalPersons, naturalPersonRepoResult);
+        naturalPersonRepoResult = naturalPersonRepository.findByLastNameStartingWith(searchPhrase).get();
+        naturalPersons = addFoundNaturalPersons(naturalPersons, naturalPersonRepoResult);
+
+        companies = companyRepository.findByCompanyNameStartingWith(searchPhrase).get();
+
+        foundUsers.add((User) naturalPersons);
+        foundUsers.add((User) companies);
+
+        return foundUsers;
+    }
+
+    private Set<NaturalPerson> addFoundNaturalPersons(Set<NaturalPerson> foundNaturalPersons, Set<NaturalPerson> naturalPersons) {
+        Set<NaturalPerson> uniqueResults = foundNaturalPersons;
+        for (NaturalPerson naturalPerson : naturalPersons) {
+            boolean isUnique = true;
+            for (NaturalPerson foundNaturalPerson : foundNaturalPersons) {
+                if (foundNaturalPerson.getEmail().equalsIgnoreCase(naturalPerson.getEmail()))
+                    isUnique = false;
+            }
+            if (isUnique)
+                uniqueResults.add(naturalPerson);
+        }
+
+        return uniqueResults;
+    }
 }
