@@ -23,7 +23,7 @@ public class Company extends User {
     }
 
     public Company(Builder builder) {
-        super(builder.email, builder.password, builder.conversations, builder.announcements, builder.friends, builder.sentFriendRequests, builder.receivedFriendRequests);
+        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements, builder.friends, builder.sentFriendRequests, builder.receivedFriendRequests);
         this.companyName = builder.companyName;
 
         CompanyAttributesValidator.validate(this);
@@ -58,6 +58,7 @@ public class Company extends User {
 
         private String email;
         private String password;
+        private String imageUrl;
         private String companyName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
@@ -72,6 +73,11 @@ public class Company extends User {
 
         public Builder withPassword(@NotNull String password) {
             this.password = password;
+            return this;
+        }
+
+        public Builder withImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
             return this;
         }
 

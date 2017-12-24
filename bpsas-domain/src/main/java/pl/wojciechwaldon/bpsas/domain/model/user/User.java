@@ -33,6 +33,8 @@ public class User implements Serializable {
     @NotNull
     protected String password;
 
+    protected String imageUrl;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
     @JsonIgnore
     protected Set<Conversation> conversations;
@@ -53,9 +55,10 @@ public class User implements Serializable {
     protected User() {
     }
 
-    protected User(String email, @NotNull String password, Set<Conversation> conversations, Set<Announcement> announcements, Set<User> friends, Set<User> sentFriendRequests, Set<User> receivedFriendRequests) {
+    protected User(@NotNull  String email, @NotNull String password, String imageUrl, Set<Conversation> conversations, Set<Announcement> announcements, Set<User> friends, Set<User> sentFriendRequests, Set<User> receivedFriendRequests) {
         this.email = email;
         this.password = password;
+        this.imageUrl = imageUrl;
         this.conversations = conversations;
         this.announcements = announcements;
         this.friends = friends;
