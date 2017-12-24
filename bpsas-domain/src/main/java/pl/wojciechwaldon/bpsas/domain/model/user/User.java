@@ -36,19 +36,19 @@ public class User implements Serializable {
     protected Set<User> sentFriendRequests;
 
     @ElementCollection(targetClass = User.class)
-    protected Set<User> receivedFriendResuests;
+    protected Set<User> receivedFriendRequests;
 
     protected User() {
     }
 
-    protected User(String email, @NotNull String password, Set<Conversation> conversations, Set<Announcement> announcements, Set<User> friends, Set<User> sentFriendRequests, Set<User> receivedFriendResuests) {
+    protected User(String email, @NotNull String password, Set<Conversation> conversations, Set<Announcement> announcements, Set<User> friends, Set<User> sentFriendRequests, Set<User> receivedFriendRequests) {
         this.email = email;
         this.password = password;
         this.conversations = conversations;
         this.announcements = announcements;
         this.friends = friends;
         this.sentFriendRequests = sentFriendRequests;
-        this.receivedFriendResuests = receivedFriendResuests;
+        this.receivedFriendRequests = receivedFriendRequests;
     }
 
     public String getEmail() {
@@ -99,12 +99,12 @@ public class User implements Serializable {
         this.sentFriendRequests = sentFriendRequests;
     }
 
-    public Set<User> getReceivedFriendResuests() {
-        return receivedFriendResuests;
+    public Set<User> getReceivedFriendRequests() {
+        return receivedFriendRequests;
     }
 
-    public void setReceivedFriendResuests(Set<User> receivedFriendResuests) {
-        this.receivedFriendResuests = receivedFriendResuests;
+    public void setReceivedFriendRequests(Set<User> receivedFriendRequests) {
+        this.receivedFriendRequests = receivedFriendRequests;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class User implements Serializable {
                 Objects.equals(announcements, user.announcements) &&
                 Objects.equals(friends, user.friends) &&
                 Objects.equals(sentFriendRequests, user.sentFriendRequests) &&
-                Objects.equals(receivedFriendResuests, user.receivedFriendResuests);
+                Objects.equals(receivedFriendRequests, user.receivedFriendRequests);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class User implements Serializable {
                 ", announcements=" + announcements +
                 ", friends=" + friends +
                 ", sentFriendRequests=" + sentFriendRequests +
-                ", receivedFriendResuests=" + receivedFriendResuests +
+                ", receivedFriendRequests=" + receivedFriendRequests +
                 '}';
     }
 }
