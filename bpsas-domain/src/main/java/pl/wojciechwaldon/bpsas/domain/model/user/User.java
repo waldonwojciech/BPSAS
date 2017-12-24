@@ -1,8 +1,12 @@
 package pl.wojciechwaldon.bpsas.domain.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
+import pl.wojciechwaldon.bpsas.domain.model.user.company.Company;
+import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +14,14 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = NaturalPerson.class, name = "naturalPerson"),
+        @JsonSubTypes.Type(value = Company.class, name = "company")
+})
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable {

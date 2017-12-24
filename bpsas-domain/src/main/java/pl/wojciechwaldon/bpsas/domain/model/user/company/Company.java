@@ -1,5 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.user.company;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
@@ -9,9 +11,11 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+@JsonAutoDetect
 @Entity
 public class Company extends User {
 
+    @JsonProperty
     @NotNull
     private String companyName;
 

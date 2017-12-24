@@ -1,5 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.user.naturalperson;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
@@ -9,12 +11,15 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+@JsonAutoDetect
 @Entity
 public class NaturalPerson extends User {
 
+    @JsonProperty
     @NotNull
     private String firstName;
 
+    @JsonProperty
     @NotNull
     private String lastName;
 

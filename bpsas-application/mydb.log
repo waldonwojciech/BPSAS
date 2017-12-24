@@ -15,7 +15,7 @@ drop table tag if exists
 drop table tag_announcements if exists
 drop table user if exists
 drop table user_friends if exists
-drop table user_received_friend_resuests if exists
+drop table user_received_friend_requests if exists
 drop table user_sent_friend_requests if exists
 drop sequence sequence_announcement if exists
 drop sequence sequence_conversation if exists
@@ -36,21 +36,19 @@ create table tag (id bigint not null, primary key (id))
 create table tag_announcements (tags_id bigint not null, announcements_id bigint not null, primary key (tags_id, announcements_id))
 create table user (email varchar(255) not null, password varchar(255) not null, primary key (email))
 create table user_friends (user_email varchar(255) not null, friends_email varchar(255) not null, primary key (user_email, friends_email))
-create table user_received_friend_resuests (user_email varchar(255) not null, received_friend_resuests_email varchar(255) not null, primary key (user_email, received_friend_resuests_email))
+create table user_received_friend_requests (user_email varchar(255) not null, received_friend_requests_email varchar(255) not null, primary key (user_email, received_friend_requests_email))
 create table user_sent_friend_requests (user_email varchar(255) not null, sent_friend_requests_email varchar(255) not null, primary key (user_email, sent_friend_requests_email))
 alter table user_friends add constraint UK_mnd5oy7io4u4turbxwk1tryfh unique (friends_email)
-alter table user_received_friend_resuests add constraint UK_m1gfcom79hsg1itbsc466ojtv unique (received_friend_resuests_email)
+alter table user_received_friend_requests add constraint UK_jbyd4sxjoadbs3s4arycnekd8 unique (received_friend_requests_email)
 alter table user_sent_friend_requests add constraint UK_lodj3mo4poc3stkew21ldyb1m unique (sent_friend_requests_email)
 alter table announcement_users add constraint FKis4fsi2bb72r0c99bs8pgkftm foreign key (announcements_id) references announcement
 alter table conversation_users add constraint FKgi76swivxn3rvd4dlu36pje3j foreign key (conversations_id) references conversation
 alter table message add constraint FK6yskk3hxw5sklwgi25y6d5u1l foreign key (conversation_id) references conversation
 alter table tag_announcements add constraint FKjk6l3son75ufal09lh07heogl foreign key (announcements_id) references announcement
 alter table tag_announcements add constraint FKbswymkobv6oxp03n7fs1beuh0 foreign key (tags_id) references tag
-INSERT INTO NATURAL_PERSON VALUES('test-email','test-password','test-first-name','test-last-name')
-COMMIT
-INSERT INTO NATURAL_PERSON VALUES('test-email2','test-password','test-first-name2','test-last-name')
-COMMIT
 INSERT INTO NATURAL_PERSON VALUES('test-email23','test-password','test-first-name23','test-last-name')
 COMMIT
 INSERT INTO COMPANY VALUES('test-email23222','test-password','XD')
+COMMIT
+INSERT INTO COMPANY VALUES('test-email23222sa','test-password','tXD')
 COMMIT
