@@ -37,15 +37,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
     public ResponseEntity<User> loginUser(User user) {
         String email = user.getEmail();
         Optional<NaturalPerson> naturalPerson = naturalPersonRepository.findByEmail(email);
+        if (naturalPerson.isPresent()) {
+            User returningUser = naturalPerson.get();
+            return new ResponseEntity(returningUser, HttpStatus.FOUND);
+        }
         Optional<Company> company = companyRepository.findByEmail(email);
-        if (naturalPerson.isPresent())
-            return new ResponseEntity(naturalPerson, HttpStatus.FOUND);
-        else if (company.isPresent())
-            return new ResponseEntity(naturalPerson, HttpStatus.FOUND);
+        if (company.isPresent()) {
+            User returningUser = naturalPerson.get();
+            return new ResponseEntity(returningUser, HttpStatus.FOUND);
+        }
         else
             throw new UserNotFoundException();
     }

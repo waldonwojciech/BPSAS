@@ -30,13 +30,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public ResponseEntity<User> loginUser(@RequestBody User user) {
         return userService.loginUser(user);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public User updatenUser(@RequestBody User user) {
+    public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
     }
 }
