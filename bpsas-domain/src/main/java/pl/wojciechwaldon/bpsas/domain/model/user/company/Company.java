@@ -58,7 +58,7 @@ public class Company extends User {
 
         private String email;
         private String password;
-        private String imageUrl;
+        private String imageUrl = "default.png";
         private String companyName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;

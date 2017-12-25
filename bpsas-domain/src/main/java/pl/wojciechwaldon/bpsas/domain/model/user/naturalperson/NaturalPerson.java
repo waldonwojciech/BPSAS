@@ -77,7 +77,7 @@ public class NaturalPerson extends User {
 
         private String email;
         private String password;
-        private String imageUrl;
+        private String imageUrl = "default.png";
         private String firstName;
         private String lastName;
         private Set<Conversation> conversations;
