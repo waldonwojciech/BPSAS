@@ -1,6 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
@@ -33,14 +34,15 @@ public class User implements Serializable {
     @NotNull
     protected String password;
 
+    @JsonProperty
     protected String imageUrl;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonIgnore
+    @JsonProperty
     protected Set<Conversation> conversations;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonIgnore
+    @JsonProperty
     protected Set<Announcement> announcements;
 
     @ElementCollection(targetClass = User.class)
