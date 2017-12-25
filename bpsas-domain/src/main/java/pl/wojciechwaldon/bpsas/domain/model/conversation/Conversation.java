@@ -22,7 +22,7 @@ public class Conversation {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @NotNull
-    @JsonIgnore
+    @JsonManagedReference
     private Set<User> users;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "conversation", orphanRemoval = true)

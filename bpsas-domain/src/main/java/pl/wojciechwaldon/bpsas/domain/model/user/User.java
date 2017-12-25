@@ -38,11 +38,11 @@ public class User implements Serializable {
     protected String imageUrl;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonProperty
+    @JsonIgnore
     protected Set<Conversation> conversations;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
-    @JsonProperty
+    @JsonIgnore
     protected Set<Announcement> announcements;
 
     @ElementCollection(targetClass = User.class)

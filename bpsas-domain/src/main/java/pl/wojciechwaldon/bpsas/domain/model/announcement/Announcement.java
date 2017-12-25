@@ -20,7 +20,7 @@ public class Announcement {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @NotNull
-    @JsonIgnore
+    @JsonManagedReference
     private Set<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "announcements")
