@@ -40,4 +40,10 @@ public class UserController {
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
     }
+
+    @RequestMapping(value = "/update/personaldata/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public User updateUserPersonalData(@RequestBody User user) {
+        return userService.updateUserPersonalData(user);
+    }
 }

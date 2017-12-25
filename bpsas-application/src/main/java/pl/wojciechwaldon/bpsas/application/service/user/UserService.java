@@ -37,6 +37,26 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateUserPersonalData(User user) {
+        if (user.getClass().equals(NaturalPerson.class)) {
+            NaturalPerson naturalPerson = (NaturalPerson) user;
+            NaturalPerson fetchedUser = (NaturalPerson) userRepository.findByEmail(user.getEmail()).get();
+            fetchedUser.setFirstName(naturalPerson.getFirstName());
+            fetchedUser.setLastName(naturalPerson.getLastName());
+            fetchedUser.setPassword(naturalPerson.getPassword());
+
+            return naturalPersonRepository.save(fetchedUser);
+        } else if ((user.getClass().equals(Company.class))) {
+            Company company = (Company) user;
+            Company fetchedCompany = (Company) userRepository.findByEmail(user.getEmail()).get();
+            fetchedCompany.setCompanyName(company.getCompanyName());
+            fetchedCompany.setPassword(company.getPassword());
+
+            return companyRepository.save(fetchedCompany);
+        } else
+            throw new UserNotFoundException();
+    }
+
     public ResponseEntity<User> loginUser(User user) {
         String email = user.getEmail();
         Optional<NaturalPerson> naturalPerson = naturalPersonRepository.findByEmail(email);
@@ -48,8 +68,7 @@ public class UserService {
         if (company.isPresent()) {
             User returningUser = naturalPerson.get();
             return new ResponseEntity(returningUser, HttpStatus.FOUND);
-        }
-        else
+        } else
             throw new UserNotFoundException();
     }
 
