@@ -33,11 +33,12 @@ public class FileController {
         } catch (Exception e) {
             throw new Exception();
         }
-        String savedFileName = file.getName();
+        String savedFileName = file.getOriginalFilename();
         return savedFileName;
     }
 
     @GetMapping("/getallfiles")
+    @ResponseBody
     public List<String> getListFiles() {
         return files.stream()
                 .map(fileName -> MvcUriComponentsBuilder

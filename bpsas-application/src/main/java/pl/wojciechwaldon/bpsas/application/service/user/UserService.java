@@ -8,6 +8,7 @@ import pl.wojciechwaldon.bpsas.application.exception.user.UserNotFoundException;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 import pl.wojciechwaldon.bpsas.domain.model.user.company.Company;
 import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
+import pl.wojciechwaldon.bpsas.domain.repository.user.UserRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.company.CompanyRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.naturalperson.NaturalPersonRepository;
 
@@ -25,9 +26,17 @@ public class UserService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<User> searchUser(String searchPhrase) {
         return getFoundUsers(searchPhrase);
     }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
 
     public ResponseEntity<User> loginUser(User user) {
         String email = user.getEmail();
