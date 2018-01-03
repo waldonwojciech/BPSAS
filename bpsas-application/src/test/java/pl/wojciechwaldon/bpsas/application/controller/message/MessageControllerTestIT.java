@@ -98,7 +98,7 @@ public class MessageControllerTestIT extends WebRestConfigClassTest {
 
     protected void prepareAnnouncement() {
         announcement = new Announcement.Builder()
-                .withUsers(Sets.newSet(company))
+                .withUser(company)
                 .build();
 
         announcement = announcementRepository.save(announcement);

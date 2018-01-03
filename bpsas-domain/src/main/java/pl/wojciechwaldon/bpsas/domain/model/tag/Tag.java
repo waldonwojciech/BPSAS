@@ -1,22 +1,26 @@
 package pl.wojciechwaldon.bpsas.domain.model.tag;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 public class Tag implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAG_GENERATOR")
-    @SequenceGenerator(name = "TAG_GENERATOR", sequenceName = "SEQUENCE_TAG", allocationSize = 1)
-    private Long id;
+    @NotNull
+    private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JsonBackReference
+    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
     private Set<Announcement> announcements;
 
     Tag() {
@@ -24,10 +28,11 @@ public class Tag implements Serializable {
 
     Tag(Builder builder) {
         this.announcements = builder.announcements;
+        this.name = builder.name;
     }
 
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     public Set<Announcement> getAnnouncements() {
@@ -42,24 +47,20 @@ public class Tag implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Tag tag = (Tag) o;
-
-        if (id != null ? !id.equals(tag.id) : tag.id != null) return false;
-        return announcements != null ? announcements.equals(tag.announcements) : tag.announcements == null;
+        return Objects.equals(name, tag.name);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (announcements != null ? announcements.hashCode() : 0);
-        return result;
+
+        return Objects.hash(name);
     }
 
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + id +
+                "name='" + name + '\'' +
                 '}';
     }
 
@@ -67,8 +68,15 @@ public class Tag implements Serializable {
 
         private Set<Announcement> announcements;
 
+        private String name;
+
         public Builder withAnnouncements(Set<Announcement> announcements) {
             this.announcements = announcements;
+            return this;
+        }
+
+        public Builder withName(String name) {
+            this.name = name;
             return this;
         }
 

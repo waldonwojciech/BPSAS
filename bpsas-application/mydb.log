@@ -1,11 +1,9 @@
 /*C3*/SET SCHEMA PUBLIC
-alter table announcement_users drop constraint FKis4fsi2bb72r0c99bs8pgkftm
-alter table conversation_users drop constraint FKgi76swivxn3rvd4dlu36pje3j
+alter table conversation_users drop constraint FK5uq0a6o3st6jea8h4y3w54t0i
 alter table message drop constraint FK6yskk3hxw5sklwgi25y6d5u1l
 alter table tag_announcements drop constraint FKjk6l3son75ufal09lh07heogl
-alter table tag_announcements drop constraint FKbswymkobv6oxp03n7fs1beuh0
+alter table tag_announcements drop constraint FKq6ovpsa0q97x5t3eigh8yeusg
 drop table announcement if exists
-drop table announcement_users if exists
 drop table company if exists
 drop table conversation if exists
 drop table conversation_users if exists
@@ -20,35 +18,39 @@ drop table user_sent_friend_requests if exists
 drop sequence sequence_announcement if exists
 drop sequence sequence_conversation if exists
 drop sequence sequence_message if exists
-drop sequence sequence_tag if exists
 create sequence sequence_announcement start with 1 increment by 1
 create sequence sequence_conversation start with 1 increment by 1
 create sequence sequence_message start with 1 increment by 1
-create sequence sequence_tag start with 1 increment by 1
-create table announcement (id bigint not null, primary key (id))
-create table announcement_users (announcements_id bigint not null, users_email varchar(255) not null, primary key (announcements_id, users_email))
-create table company (email varchar(255) not null, password varchar(255) not null, company_name varchar(255) not null, primary key (email))
-create table conversation (id bigint not null, primary key (id))
-create table conversation_users (conversations_id bigint not null, users_email varchar(255) not null, primary key (conversations_id, users_email))
+create table announcement (id bigint not null, content varchar(255), date date, title varchar(255), user_email varchar(255) not null, primary key (id))
+create table company (email varchar(255) not null, image_url varchar(255), password varchar(255) not null, company_name varchar(255) not null, primary key (email))
+create table conversation (id bigint not null, users_email varchar(255), primary key (id))
+create table conversation_users (conversation_id bigint not null, users_email varchar(255) not null, primary key (conversation_id, users_email))
 create table message (id bigint not null, content varchar(255) not null, conversation_id bigint not null, primary key (id))
-create table natural_person (email varchar(255) not null, password varchar(255) not null, first_name varchar(255) not null, last_name varchar(255) not null, primary key (email))
-create table tag (id bigint not null, primary key (id))
-create table tag_announcements (tags_id bigint not null, announcements_id bigint not null, primary key (tags_id, announcements_id))
-create table user (email varchar(255) not null, password varchar(255) not null, primary key (email))
+create table natural_person (email varchar(255) not null, image_url varchar(255), password varchar(255) not null, first_name varchar(255) not null, last_name varchar(255) not null, primary key (email))
+create table tag (name varchar(255) not null, primary key (name))
+create table tag_announcements (tags_name varchar(255) not null, announcements_id bigint not null, primary key (tags_name, announcements_id))
+create table user (email varchar(255) not null, image_url varchar(255), password varchar(255) not null, primary key (email))
 create table user_friends (user_email varchar(255) not null, friends_email varchar(255) not null, primary key (user_email, friends_email))
 create table user_received_friend_requests (user_email varchar(255) not null, received_friend_requests_email varchar(255) not null, primary key (user_email, received_friend_requests_email))
 create table user_sent_friend_requests (user_email varchar(255) not null, sent_friend_requests_email varchar(255) not null, primary key (user_email, sent_friend_requests_email))
 alter table user_friends add constraint UK_mnd5oy7io4u4turbxwk1tryfh unique (friends_email)
 alter table user_received_friend_requests add constraint UK_jbyd4sxjoadbs3s4arycnekd8 unique (received_friend_requests_email)
 alter table user_sent_friend_requests add constraint UK_lodj3mo4poc3stkew21ldyb1m unique (sent_friend_requests_email)
-alter table announcement_users add constraint FKis4fsi2bb72r0c99bs8pgkftm foreign key (announcements_id) references announcement
-alter table conversation_users add constraint FKgi76swivxn3rvd4dlu36pje3j foreign key (conversations_id) references conversation
+alter table conversation_users add constraint FK5uq0a6o3st6jea8h4y3w54t0i foreign key (conversation_id) references conversation
 alter table message add constraint FK6yskk3hxw5sklwgi25y6d5u1l foreign key (conversation_id) references conversation
 alter table tag_announcements add constraint FKjk6l3son75ufal09lh07heogl foreign key (announcements_id) references announcement
-alter table tag_announcements add constraint FKbswymkobv6oxp03n7fs1beuh0 foreign key (tags_id) references tag
-INSERT INTO NATURAL_PERSON VALUES('test-email23','test-password','test-first-name23','test-last-name')
+alter table tag_announcements add constraint FKq6ovpsa0q97x5t3eigh8yeusg foreign key (tags_name) references tag
+INSERT INTO NATURAL_PERSON VALUES('a@gmai4l.com','default.png','aaaaaa','aaaaa','aaaaaa')
 COMMIT
-INSERT INTO COMPANY VALUES('test-email23222','test-password','XD')
+INSERT INTO ANNOUNCEMENT VALUES(1,'test-content','2016-02-20','test-title','a@gmai4l.com')
+ALTER SEQUENCE PUBLIC.SEQUENCE_ANNOUNCEMENT RESTART WITH 2
 COMMIT
-INSERT INTO COMPANY VALUES('test-email23222sa','test-password','tXD')
+INSERT INTO TAG VALUES('test-n31e')
+INSERT INTO TAG_ANNOUNCEMENTS VALUES('test-n31e',1)
+COMMIT
+INSERT INTO ANNOUNCEMENT VALUES(2,'test-content','2016-02-20','test-title','a@gmai4l.com')
+ALTER SEQUENCE PUBLIC.SEQUENCE_ANNOUNCEMENT RESTART WITH 3
+COMMIT
+INSERT INTO TAG VALUES('tedasdasd1e')
+INSERT INTO TAG_ANNOUNCEMENTS VALUES('tedasdasd1e',2)
 COMMIT

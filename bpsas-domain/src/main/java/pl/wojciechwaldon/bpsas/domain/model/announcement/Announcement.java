@@ -1,13 +1,17 @@
 package pl.wojciechwaldon.bpsas.domain.model.announcement;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.apache.tomcat.jni.Local;
 import pl.wojciechwaldon.bpsas.domain.model.tag.Tag;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -18,76 +22,111 @@ public class Announcement {
     @SequenceGenerator(name = "ANNOUNCEMENT_GENERATOR", sequenceName = "SEQUENCE_ANNOUNCEMENT", allocationSize = 1)
     private Long id;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @NotNull
-    @JsonManagedReference
-    private Set<User> users;
+    @JsonProperty
+    private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "announcements")
-    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "announcements")
+    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
     private Set<Tag> tags;
 
-    Announcement() {
+    @JsonProperty
+    private String content;
+
+    @JsonProperty
+    private String title;
+
+    @JsonProperty
+    private LocalDate date;
+
+    public Announcement() {
     }
 
     Announcement(Builder builder) {
-        this.users = builder.users;
+        this.user = builder.user;
         this.tags = builder.tags;
+        this.content = builder.content;
+        this.title = builder.title;
+        this.date = builder.date;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Announcement that = (Announcement) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (users != null ? !users.equals(that.users) : that.users != null) return false;
-        return tags != null ? tags.equals(that.tags) : that.tags == null;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (users != null ? users.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Announcement{" +
                 "id=" + id +
-                ", tags=" + tags +
                 '}';
     }
 
     public static class Builder {
 
-        private Set<User> users;
+        private User user;
         private Set<Tag> tags;
+        private String content;
+        private String title;
+        private LocalDate date;
 
-        public Builder withUsers(@NotNull Set<User> users) {
-            this.users = users;
-            return  this;
+        public Builder withUser(@NotNull User user) {
+            this.user = user;
+            return this;
         }
 
         public Builder withTags(Set<Tag> tags) {
             this.tags = tags;
-            return  this;
+            return this;
+        }
+
+        public Builder withContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder withDate(LocalDate date) {
+            this.date = date;
+            return this;
         }
 
         public Announcement build() {

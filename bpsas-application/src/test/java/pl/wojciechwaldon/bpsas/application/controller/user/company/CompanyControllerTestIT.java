@@ -155,7 +155,7 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
 
     protected void prepareAnnouncement() {
         announcement = new Announcement.Builder()
-                .withUsers(Sets.newSet(persistedCompany))
+                .withUser(persistedCompany)
                 .build();
 
         announcementRepository.save(announcement);

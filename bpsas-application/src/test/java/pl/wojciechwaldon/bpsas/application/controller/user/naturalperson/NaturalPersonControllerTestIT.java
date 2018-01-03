@@ -112,7 +112,7 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest {
 
     protected void prepareAnnouncement() {
         announcement = new Announcement.Builder()
-                .withUsers(Sets.newSet(persistedNaturalPerson))
+                .withUser(persistedNaturalPerson)
                 .build();
 
         announcementRepository.save(announcement);

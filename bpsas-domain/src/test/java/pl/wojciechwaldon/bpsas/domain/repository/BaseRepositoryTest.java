@@ -1,19 +1,10 @@
 package pl.wojciechwaldon.bpsas.domain.repository;
 
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-import org.springframework.test.context.web.WebAppConfiguration;
-import pl.wojciechwaldon.bpsas.domain.TestSpringBootApplicationClass;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 import pl.wojciechwaldon.bpsas.domain.model.conversation.Conversation;
 import pl.wojciechwaldon.bpsas.domain.model.message.Message;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
-import pl.wojciechwaldon.bpsas.domain.model.user.naturalperson.NaturalPerson;
 import pl.wojciechwaldon.bpsas.domain.repository.announcement.AnnouncementRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.conversation.ConversationRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.message.MessageRepository;
@@ -41,11 +32,12 @@ public class BaseRepositoryTest {
     protected Message test_message;
     protected Conversation test_conversation;
     protected Announcement test_announcement;
+    protected User test_user;
 
     protected List<Message> test_messages = new ArrayList<Message>();
     protected Set<Conversation> test_conversations = new HashSet<Conversation>();
-    protected Set<User> test_users = new HashSet<User>();
     protected Set<Announcement> test_announcements = new HashSet<Announcement>();
+    protected Set<User> test_users = new HashSet<>();
 
 
     protected void prepareMessage() {
@@ -58,8 +50,9 @@ public class BaseRepositoryTest {
     }
 
     protected void prepareAnnouncement() {
+        test_user = test_users.parallelStream().findFirst().get();
         test_announcement = new Announcement.Builder()
-                .withUsers(test_users)
+                .withUser(test_user)
                 .build();
 
         test_announcements.add(test_announcement);

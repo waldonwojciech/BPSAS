@@ -5,13 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import pl.wojciechwaldon.bpsas.application.service.announcement.AnnouncementService;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
+
+import java.util.List;
 
 @Controller
 @EnableWebMvc
@@ -27,5 +26,11 @@ public class AnnouncementController {
     @ResponseBody
     public Announcement updateUser(@RequestBody Announcement announcement) {
         return announcementService.updateAnnouncement(announcement);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Announcement> findAll() {
+        return announcementService.findAll();
     }
 }
