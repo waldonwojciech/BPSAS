@@ -78,6 +78,7 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest {
 //                .andExpect(jsonPath("announcements.length()", is(unpersistedNaturalPerson.getAnnouncements().size())));
     }
 
+    @Test
     public void shoulThrowNaturalPersonAlreadyExistException() throws Exception {
         Gson gson = new Gson();
         String jsonNaturalPerson = gson.toJson(persistedNaturalPerson, NaturalPerson.class);
@@ -139,10 +140,10 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest {
                 .withConversations(Sets.newSet(conversation))
                 .build();
 
+        naturalPersonRepository.save(persistedNaturalPerson);
         prepareAnnouncement();
         prepareConversation();
 
-        naturalPersonRepository.save(persistedNaturalPerson);
 
     }
 
@@ -159,8 +160,8 @@ public class NaturalPersonControllerTestIT extends WebRestConfigClassTest {
     }
 
     private void clearDatabase() {
-        naturalPersonRepository.deleteAll();
         conversationRepository.deleteAll();
         announcementRepository.deleteAll();
+        naturalPersonRepository.deleteAll();
     }
 }

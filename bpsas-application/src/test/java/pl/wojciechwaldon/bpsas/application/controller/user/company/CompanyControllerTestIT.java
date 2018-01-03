@@ -125,10 +125,9 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
                 .withConversations(Sets.newSet(conversation))
                 .build();
 
+        companyRepository.save(persistedCompany);
         prepareAnnouncement();
         prepareConversation();
-
-        companyRepository.save(persistedCompany);
     }
 
     private void prepareUnersistedCompany() {
@@ -141,9 +140,8 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
                 .build();
 
         prepareAnnouncement();
-        prepareConversation();
-
         companyRepository.save(unpersistedCompany);
+        prepareConversation();
     }
 
     protected void prepareMessage() {
@@ -173,8 +171,8 @@ public class CompanyControllerTestIT extends WebRestConfigClassTest {
     }
 
     private void clearDatabase() {
-        companyRepository.deleteAll();
         conversationRepository.deleteAll();
         announcementRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }
