@@ -27,7 +27,7 @@ public class NaturalPerson extends User {
     }
 
     NaturalPerson(Builder builder) {
-        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements, builder.friends, builder.sentFriendRequests, builder.receivedFriendRequests);
+        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements);
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
 
@@ -82,9 +82,6 @@ public class NaturalPerson extends User {
         private String lastName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
-        private Set<User> friends;
-        private Set<User> sentFriendRequests;
-        private Set<User> receivedFriendRequests;
 
         public Builder withEmail(@NotNull String email) {
             this.email = email;
@@ -118,21 +115,6 @@ public class NaturalPerson extends User {
 
         public Builder withAnnouncements(Set<Announcement> announcements) {
             this.announcements = announcements;
-            return this;
-        }
-
-        public Builder withFriends(Set<User> friends) {
-            this.friends = friends;
-            return this;
-        }
-
-        public Builder withSentFriendRequests(Set<User> sentFriendRequests) {
-            this.sentFriendRequests = sentFriendRequests;
-            return this;
-        }
-
-        public Builder withReceivedFriendRequests(Set<User> receivedFriendRequests) {
-            this.receivedFriendRequests = receivedFriendRequests;
             return this;
         }
 

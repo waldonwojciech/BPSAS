@@ -23,7 +23,7 @@ public class Company extends User {
     }
 
     public Company(Builder builder) {
-        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements, builder.friends, builder.sentFriendRequests, builder.receivedFriendRequests);
+        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements);
         this.companyName = builder.companyName;
 
         CompanyAttributesValidator.validate(this);
@@ -66,9 +66,6 @@ public class Company extends User {
         private String companyName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
-        private Set<User> friends;
-        private Set<User> sentFriendRequests;
-        private Set<User> receivedFriendRequests;
 
         public Builder withEmail(@NotNull String email) {
             this.email = email;
@@ -97,21 +94,6 @@ public class Company extends User {
 
         public Builder withAnnouncements(Set<Announcement> announcements) {
             this.announcements = announcements;
-            return this;
-        }
-
-        public Builder withFriends(Set<User> friends) {
-            this.friends = friends;
-            return this;
-        }
-
-        public Builder withSentFriendRequests(Set<User> sentFriendRequests) {
-            this.sentFriendRequests = sentFriendRequests;
-            return this;
-        }
-
-        public Builder withReceivedFriendRequests(Set<User> receivedFriendRequests) {
-            this.receivedFriendRequests = receivedFriendRequests;
             return this;
         }
 
