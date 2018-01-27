@@ -70,7 +70,7 @@ public class Announcement {
         return title;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -123,7 +123,7 @@ public class Announcement {
             return this;
         }
 
-        public Builder withDate(LocalDate date) {
+        public Builder withDate(Date date) {
             this.date = date;
             return this;
         }
