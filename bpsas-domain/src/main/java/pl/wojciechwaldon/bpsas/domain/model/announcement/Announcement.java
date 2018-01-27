@@ -1,6 +1,7 @@
 package pl.wojciechwaldon.bpsas.domain.model.announcement;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import pl.wojciechwaldon.bpsas.domain.model.tag.Tag;
@@ -26,8 +27,7 @@ public class Announcement {
     @JsonProperty
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "announcements")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "announcements")
     private Set<Tag> tags;
 
     @JsonProperty

@@ -1,14 +1,12 @@
 package pl.wojciechwaldon.bpsas.domain.model.tag;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import pl.wojciechwaldon.bpsas.domain.model.announcement.Announcement;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,9 +17,9 @@ public class Tag implements Serializable {
     @NotNull
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
-    private Set<Announcement> announcements;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    private List<Announcement> announcements;
 
     Tag() {
     }
@@ -35,11 +33,11 @@ public class Tag implements Serializable {
         return name;
     }
 
-    public Set<Announcement> getAnnouncements() {
+    public List<Announcement> getAnnouncements() {
         return announcements;
     }
 
-    public void setAnnouncements(Set<Announcement> announcements) {
+    public void setAnnouncements(List<Announcement> announcements) {
         this.announcements = announcements;
     }
 
@@ -66,11 +64,11 @@ public class Tag implements Serializable {
 
     public static class Builder {
 
-        private Set<Announcement> announcements;
+        private List<Announcement> announcements;
 
         private String name;
 
-        public Builder withAnnouncements(Set<Announcement> announcements) {
+        public Builder withAnnouncements(List<Announcement> announcements) {
             this.announcements = announcements;
             return this;
         }

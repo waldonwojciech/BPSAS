@@ -9,8 +9,7 @@ import pl.wojciechwaldon.bpsas.domain.repository.announcement.AnnouncementReposi
 import pl.wojciechwaldon.bpsas.domain.repository.tag.TagRepository;
 import pl.wojciechwaldon.bpsas.domain.repository.user.UserRepository;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AnnouncementService {
@@ -26,19 +25,24 @@ public class AnnouncementService {
 
 
     public Announcement updateAnnouncement(Announcement announcement) {
+
         Announcement savedAnnouncement = announcementRepository.save(announcement);
-        User user = userRepository.findByEmail(announcement.getUser().getEmail()).get();
 
-        user.getAnnouncements().add(announcement);
+        Tag[] tags = new Tag[announcement.getTags().size()];
+        announcement.getTags().toArray(tags);
+        for (Tag tag : tags) {
+            Optional<Tag> persistedTag = tagRepository.findByName(tag.getName());
+            if(persistedTag.isPresent()) {
+                persistedTag.get().getAnnouncements().add(announcement);
 
-        for (Tag tag : announcement.getTags()) {
-            if (tag.getAnnouncements() == null)
-                tag.setAnnouncements(new HashSet<>());
-            tag.getAnnouncements().add(savedAnnouncement);
-            tagRepository.save(tag);
+                tagRepository.save(persistedTag.get());
+            }else {
+                if (tag.getAnnouncements() == null)
+                    tag.setAnnouncements(new ArrayList<>());
+                tag.getAnnouncements().add(announcement);
+                tagRepository.save(tag);
+            }
         }
-
-        userRepository.save(user);
 
         return savedAnnouncement;
     }
