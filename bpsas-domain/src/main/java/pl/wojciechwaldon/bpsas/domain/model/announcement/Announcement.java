@@ -1,16 +1,15 @@
 package pl.wojciechwaldon.bpsas.domain.model.announcement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.apache.tomcat.jni.Local;
 import pl.wojciechwaldon.bpsas.domain.model.tag.Tag;
 import pl.wojciechwaldon.bpsas.domain.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ public class Announcement {
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "announcements")
-    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
     private Set<Tag> tags;
 
     @JsonProperty
@@ -38,7 +37,7 @@ public class Announcement {
     private String title;
 
     @JsonProperty
-    private LocalDate date;
+    private Date date;
 
     public Announcement() {
     }
@@ -102,7 +101,7 @@ public class Announcement {
         private Set<Tag> tags;
         private String content;
         private String title;
-        private LocalDate date;
+        private Date date;
 
         public Builder withUser(@NotNull User user) {
             this.user = user;
