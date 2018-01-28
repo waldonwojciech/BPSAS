@@ -18,7 +18,7 @@ public class Tag implements Serializable {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Announcement> announcements;
 
     Tag() {
