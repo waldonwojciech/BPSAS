@@ -27,7 +27,7 @@ public class NaturalPerson extends User {
     }
 
     NaturalPerson(Builder builder) {
-        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements);
+        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements, builder.aboutMe);
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
 
@@ -82,6 +82,7 @@ public class NaturalPerson extends User {
         private String lastName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
+        private String aboutMe = "";
 
         public Builder withEmail(@NotNull String email) {
             this.email = email;

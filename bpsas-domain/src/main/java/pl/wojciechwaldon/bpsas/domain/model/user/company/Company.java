@@ -23,7 +23,7 @@ public class Company extends User {
     }
 
     public Company(Builder builder) {
-        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements);
+        super(builder.email, builder.password, builder.imageUrl, builder.conversations, builder.announcements, builder.aboutMe);
         this.companyName = builder.companyName;
 
         CompanyAttributesValidator.validate(this);
@@ -66,6 +66,7 @@ public class Company extends User {
         private String companyName;
         private Set<Conversation> conversations;
         private Set<Announcement> announcements;
+        private String aboutMe = "";
 
         public Builder withEmail(@NotNull String email) {
             this.email = email;

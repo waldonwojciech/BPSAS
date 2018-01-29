@@ -37,6 +37,9 @@ public class User implements Serializable {
     @JsonProperty
     protected String imageUrl;
 
+    @JsonProperty
+    protected String aboutMe;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE}, mappedBy = "users")
     @JsonIgnore
     protected Set<Conversation> conversations;
@@ -48,12 +51,13 @@ public class User implements Serializable {
     protected User() {
     }
 
-    protected User(@NotNull String email, @NotNull String password, String imageUrl, Set<Conversation> conversations, Set<Announcement> announcements) {
+    protected User(@NotNull String email, @NotNull String password, String imageUrl, Set<Conversation> conversations, Set<Announcement> announcements, String aboutMe) {
         this.email = email;
         this.password = password;
         this.imageUrl = imageUrl;
         this.conversations = conversations;
         this.announcements = announcements;
+        this.aboutMe = aboutMe;
     }
 
     public String getEmail() {
@@ -88,6 +92,10 @@ public class User implements Serializable {
         this.announcements = announcements;
     }
 
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,6 +120,7 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", conversations=" + conversations +
                 ", announcements=" + announcements +
+                ", aboutMe=" + aboutMe +
                 '}';
     }
 }
